@@ -1,8 +1,8 @@
-from gevent import monkey
+from gevent import monkey, sleep
 monkey.patch_all()
 from bottle import get, run, error, abort
 import sys
-import random
+from random import random
 from linecache import getline
 
 port = int(sys.argv[1])
@@ -14,8 +14,8 @@ getline(filename, 0)
 @error(404)
 def error404(error):
     return ('Request any page of {page_size} rows. Searching outside of the\n'
-            'available range will return empty results. The service is\n'
-            'extremly shaky so expect erors.\n\n'
+            'range of available data will return empty results.\n\n'
+
             'API usage:\n'
             'GET /logs/<page>\n\n'
 
@@ -36,8 +36,10 @@ def numbers(page):
 @get('/logs/<page:int>')
 def logs(page):
     # random errors, beware!
-    if random.randint(0, 10) == 0:
+    if random() <= 0.1:
         abort(503)
+
+    sleep(random() * 0.5 + 0.3)
 
     start = page * page_size
     end = start + page_size
