@@ -46,8 +46,11 @@ def logs(page):
 
 def get_rows(start, end):
     output = ''
-    for line in xrange(start, end):
-        output += getline(filename, line)
+    try:
+        for line in xrange(start, end):
+            output += getline(filename, line)
+    except OverflowError:
+        pass
 
     return output
 
